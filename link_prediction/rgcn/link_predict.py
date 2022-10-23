@@ -324,6 +324,7 @@ all_logits = []
 for e in range(100):
     # forward
     h = model(train_g, train_g.ndata['feat'])
+    # Passing the embedding of the original graph to predictor
     pos_score = pred(train_pos_g, h)
     neg_score = pred(train_neg_g, h)
     loss = compute_loss(pos_score, neg_score)
@@ -339,6 +340,7 @@ for e in range(100):
 # ----------- 5. check results ------------------------ #
 from sklearn.metrics import roc_auc_score
 with torch.no_grad():
+    # Passing the embedding of the original graph to predictor
     pos_score = pred(test_pos_g, h)
     neg_score = pred(test_neg_g, h)
     print('AUC', compute_auc(pos_score, neg_score))
@@ -348,6 +350,7 @@ with torch.no_grad():
 # inf_score = pred(adj_neg_g, h)
 inf_neg_g = dgl.graph((neg_u, neg_v), num_nodes=g.number_of_nodes())
 with torch.no_grad():
+    # Passing the embedding of the original graph to predictor
     inf_score = pred(inf_neg_g, h)
     # Convert logits to probability
     inf_score = torch.sigmoid(inf_score)
